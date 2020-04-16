@@ -32,7 +32,7 @@ public class Line {
     }
 
     public void setPenSize(int penSize) {
-
+        
         this.penSize = penSize;
         penStroke = new BasicStroke(penSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
     }

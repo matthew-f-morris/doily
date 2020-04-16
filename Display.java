@@ -1,18 +1,28 @@
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
+import java.util.*;
+import javax.swing.JPanel;
+import java.awt.Graphics2D;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.awt.RenderingHints;
 
 public class Display extends JPanel {
 
     JPanel thisPanel = this;
     MousePaintingListener listener = new MousePaintingListener();
+    int sectors = 16;
+    boolean sectorsDrawn = true;
+
+    Line tempLine = new Line(true, Color.WHITE, 4);
+    ArrayList<Line> lines = new ArrayList<Line>();
 
     public Display() {
 
-        setBackground(Color.BLACK);
+        setBackground(Color.DARK_GRAY);
         addMouseListener(listener);
         addMouseMotionListener(listener);
         setPreferredSize(new Dimension(Frame.WIDTH, Frame.HEIGHT));
@@ -120,18 +130,6 @@ public class Display extends JPanel {
                 thisPanel.repaint();
             }
         }
-
-        // public void mouseMoved(MouseEvent e) {
-        // }
-
-        // public void mouseClicked(MouseEvent e) {
-        // }
-
-        // public void mouseEntered(MouseEvent e) {
-        // }
-
-        // public void mouseExited(MouseEvent e) {
-        // }
 
         public void mousePressed(MouseEvent e) {
 

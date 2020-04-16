@@ -4,11 +4,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.*;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -17,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -33,11 +38,19 @@ public class DoilyGui extends JFrame {
     int numberOfPictures = 0;
     boolean sectorsDrawn = true;
 
+    Border blackline = BorderFactory.createLineBorder(Color.darkGray);
+
     // a temporary line is used to store the current line being drawn
 
     Line tempLine = new Line(true, Color.WHITE, 4);
 
     public static void main(String[] args) {
+
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            System.err.println("Look and feel not set!");
+        }
 
         DoilyGui frame = new DoilyGui();
         frame.initialise();
@@ -60,7 +73,8 @@ public class DoilyGui extends JFrame {
         JButton undo = new JButton("Undo");
         JButton clear = new JButton("Clear");
 
-        JLabel numSectionsName = new JLabel("Number of Sectors:	");
+        JLabel numSectionsName = new JLabel("Number of Sectors:");
+        JLabel penSize = new JLabel("Pen Size:");
         JButton penColorButton = new JButton("Pen Colour");
 
         JButton delete = new JButton("Delete");
@@ -74,7 +88,7 @@ public class DoilyGui extends JFrame {
         Display display = new Display();
         GalleryPanel gallery = new GalleryPanel();
 
-        upperPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        upperPanel.setLayout(new GridLayout(1, 2, 20, 20));
         upperPanel.add(display);
         upperPanel.add(gallery);
 
@@ -82,22 +96,22 @@ public class DoilyGui extends JFrame {
 
         JPanel control = new JPanel();
         contentPane.add(control, BorderLayout.SOUTH);
-
-        control.setLayout(new FlowLayout());
+        control.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
 
         JPanel saveClearUndo = new JPanel();
-        saveClearUndo.setLayout(new GridLayout(3, 1));
+        saveClearUndo.setLayout(new GridLayout(1,3, 10, 10));
 
         JPanel pen = new JPanel();
-        pen.setLayout(new FlowLayout());
+        pen.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
 
         JPanel showLineReflected = new JPanel();
-        showLineReflected.setLayout(new GridLayout(2, 1));
+        showLineReflected.setLayout(new GridLayout(2, 1, 30, 10));
 
         JPanel sections = new JPanel();
-        sections.setLayout(new FlowLayout());
+        sections.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
 
-        // setting up sliders for pen size and number of sectors
+        JPanel galleryControls = new JPanel();
+        galleryControls.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 10));
 
         JSlider penSizeSlider = new JSlider(JSlider.HORIZONTAL, 0, 20, 4);
         penSizeSlider.setMinorTickSpacing(1);
@@ -112,8 +126,6 @@ public class DoilyGui extends JFrame {
         numberOfSectors.setPaintTicks(true);
         numberOfSectors.setPaintLabels(true);
         numberOfSectors.setPaintTrack(true);
-
-        // adding listeners for the buttons
 
         penColorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -275,28 +287,29 @@ public class DoilyGui extends JFrame {
             }
         });
 
-        // adding the componenets to their jpanels
-
         saveClearUndo.add(save);
         saveClearUndo.add(undo);
         saveClearUndo.add(clear);
-        // saveClearUndo.add(galleryButton);
 
         sections.add(numSectionsName);
         sections.add(numberOfSectors);
-
+        
+        pen.add(penSize);
         pen.add(penSizeSlider);
         pen.add(penColorButton);
+
         showLineReflected.add(showReflected);
         showLineReflected.add(showSectors);
+
+        galleryControls.add(left);
+        galleryControls.add(delete);
+        galleryControls.add(right);
 
         control.add(saveClearUndo);
         control.add(sections);
         control.add(pen);
         control.add(showLineReflected);
-        control.add(left);
-        control.add(delete);
-        control.add(right);
+        control.add(galleryControls);
 
         setVisible(true);
     }
@@ -322,7 +335,20 @@ public class DoilyGui extends JFrame {
             else {
                 // when theres no images saved in the gallery, the words gallery are displayed
 
-                gallery.setFont(new Font("Arial", Font.BOLD, 40));
+                Font font = new Font("Arial", Font.BOLD, 40);
+
+                gallery.setFont(font));
+
+                FontMetrics metrics = g.getFontMetrics(font);
+                // Determine the X coordinate for the text
+                int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+                // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
+                int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+                // Set the font
+                g.setFont(font);
+                // Draw the String
+                g.drawString(text, x, y);
+
                 gallery.drawString("GALLERY", this.getWidth() / 2, this.getHeight() / 2);
             }
         }
