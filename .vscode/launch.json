@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DoilyGui<DigitalDoily_5e7e65c4>",
+            "request": "launch",
+            "mainClass": "DoilyGui",
+            "projectName": "DigitalDoily_5e7e65c4",
+            "vmArgs": "-XX:+UseParallelGC -Xmx8g -Xms128m"
+        }
+    ]
+}
