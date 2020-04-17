@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class Line {
 
-    public ArrayList<Point> point = new ArrayList<Point>();
-    public Color penColor;
-    public int penSize;
-    public boolean isReflected;
-    public BasicStroke penStroke;
+    private ArrayList<Point> point = new ArrayList<Point>();
+    private Color penColor;
+    private int penSize;
+    private boolean isReflected;
+    private BasicStroke penStroke;
 
     public Line(boolean reflected, Color color, int size) {
 
@@ -32,7 +32,7 @@ public class Line {
     }
 
     public void setPenSize(int penSize) {
-        
+
         this.penSize = penSize;
         penStroke = new BasicStroke(penSize, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL);
     }

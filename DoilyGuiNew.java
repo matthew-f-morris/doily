@@ -1,3 +1,4 @@
+import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -25,20 +26,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-import java.awt.Graphics2D;
-import java.awt.event.*;
+public class DoilyGuiNew extends JFrame {
 
-public class DoilyGui extends JFrame {
-
-    ArrayList<BufferedImage> galleryArray = new ArrayList<BufferedImage>();
-    ArrayList<Line> lines = new ArrayList<Line>();
-
-    int currentPicture = 0;
-    int sectors = 16;
-    int numberOfPictures = 0;
-    boolean sectorsDrawn = false;
-
-    Line tempLine = new Line(true, Color.WHITE, 4);
+    private int sectors = 16;
+    private boolean sectorsDrawn = true;
 
     public static void main(String[] args) {
 
@@ -48,7 +39,7 @@ public class DoilyGui extends JFrame {
             System.err.println("Look and feel not set!");
         }
 
-        DoilyGui frame = new DoilyGui();
+        DoilyGuiNew frame = new DoilyGuiNew();
         frame.initialise();
     }
 
@@ -62,8 +53,6 @@ public class DoilyGui extends JFrame {
         setSize(1800, 900);
         setResizable(false);
         setLocationRelativeTo(null);
-
-        // making the components
 
         JButton save = new JButton("Save");
         JButton undo = new JButton("Undo");
@@ -81,14 +70,8 @@ public class DoilyGui extends JFrame {
         JCheckBox showReflected = new JCheckBox("Reflect", true);
 
         JPanel upperPanel = new JPanel();
-        Display display = new Display();
-        GalleryPanel gallery = new GalleryPanel();
-
-        upperPanel.setLayout(new GridLayout(1, 2, 20, 20));
-        upperPanel.add(display);
-        upperPanel.add(gallery);
-
-        contentPane.add(upperPanel, BorderLayout.CENTER);
+        DisplayNew display = new DisplayNew(sectors, sectorsDrawn);
+        Gallery gallery = new Gallery(0);
 
         JPanel control = new JPanel();
         contentPane.add(control, BorderLayout.SOUTH);
@@ -122,6 +105,12 @@ public class DoilyGui extends JFrame {
         numberOfSectors.setPaintTicks(true);
         numberOfSectors.setPaintLabels(true);
         numberOfSectors.setPaintTrack(true);
+
+        upperPanel.setLayout(new GridLayout(1, 2, 20, 20));
+        upperPanel.add(display);
+        upperPanel.add(gallery);
+
+        contentPane.add(upperPanel, BorderLayout.CENTER);
 
         penColorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -296,36 +285,5 @@ public class DoilyGui extends JFrame {
         control.add(galleryControls);
 
         setVisible(true);
-    }
-
-    // this class is used to display the doilys as a buffered image
-
-    class GalleryPanel extends JPanel {
-
-        public GalleryPanel() {
-            setPreferredSize(new Dimension(Frame.WIDTH, Frame.HEIGHT));
-        }
-
-        public void paintComponent(Graphics g) {
-
-            super.paintComponent(g);
-            Graphics2D gallery = (Graphics2D) g;
-
-            if (numberOfPictures > 0)
-                gallery.drawImage(galleryArray.get(currentPicture - 1), null, 0, 0);
-
-            else {
-
-                String str = "Gallery is Empty";
-                Font font = new Font("Arial", Font.BOLD, 40);
-                FontMetrics metrics = gallery.getFontMetrics(font);
-
-                int x = (this.getWidth() - metrics.stringWidth(str)) / 2;
-                int y = ((this.getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
-
-                gallery.setFont(font);
-                gallery.drawString(str, x, y);
-            }
-        }
     }
 }

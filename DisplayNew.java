@@ -10,27 +10,35 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.RenderingHints;
 
-public class Display extends JPanel {
+public class DisplayNew extends JPanel {
 
-    JPanel thisPanel = this;
-    MousePaintingListener listener = new MousePaintingListener();
-    int sectors = 16;
-    boolean sectorsDrawn = true;
+    private int sectors = 16;
+    private boolean sectorsDrawn = true;
+    private JPanel thisPanel = this;
+    private MousePaintingListener listener = new MousePaintingListener();
 
-    Line tempLine = new Line(true, Color.WHITE, 4);
-    ArrayList<Line> lines = new ArrayList<Line>();
+    private Line tempLine = new Line(true, Color.WHITE, 4);
+    private List<Line> lines = new ArrayList<Line>();
 
-    public Display() {
+    public DisplayNew(int sectors, boolean draw) {
 
-        setBackground(Color.DARK_GRAY);
-        addMouseListener(listener);
-        addMouseMotionListener(listener);
-        setPreferredSize(new Dimension(Frame.WIDTH, Frame.HEIGHT));
+        this.sectors = sectors;
+        this.sectorsDrawn = draw;
+        this.setBackground(Color.DARK_GRAY);
+        this.addMouseListener(listener);
+        this.addMouseMotionListener(listener);
+        this.setPreferredSize(new Dimension(Frame.WIDTH, Frame.HEIGHT));
+    }
+
+    public void setSectorsDrawn(boolean set) {
+        this.sectorsDrawn = set;
+    }
+
+    public void setSectors(int sectors) {
+        this.sectors = sectors;
     }
 
     public void paintComponent(Graphics g) {
-
-        // initialise variables used in this method
 
         double angle = 360.0 / sectors;
         double radian = angle * Math.PI / 180;
@@ -45,16 +53,12 @@ public class Display extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (sectorsDrawn == true) {
-
             for (int i = 0; i < sectors; i++) {
-
                 g2d.setColor(Color.WHITE);
                 g2d.draw(new Line2D.Double(centralPoint, outerPoint));
                 g2d.rotate(radian, centreX, centreY);
             }
         }
-
-        // draws the lines from the arraylist of lines
 
         for (int i = 0; i < lines.size(); i++) {
             for (int k = 0; k < sectors; k++) {
@@ -69,8 +73,6 @@ public class Display extends JPanel {
                     g2d.setColor(lines.get(i).getPenColor());
                     g2d.setStroke(lines.get(i).getPenStroke());
                     g2d.draw(new Line2D.Double(prevPoint, currentPoint));
-
-                    // if the line is reflected, the reflections are drawn
 
                     if (lines.get(i).isReflected() == true)
                         g2d.draw(new Line2D.Double(this.getWidth() - prevPoint.getX(), prevPoint.getY(),
@@ -100,24 +102,24 @@ public class Display extends JPanel {
         }
     }
 
-    class MousePaintingListener implements MouseListener, MouseMotionListener {
+    private class MousePaintingListener implements MouseListener, MouseMotionListener {
 
+        @Override
         public void mouseDragged(MouseEvent e) {
-
             if (!(tempLine.equals(null))) {
                 tempLine.addPoint(new Point(e.getX(), e.getY()));
                 thisPanel.repaint();
             }
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
-
             tempLine.addPoint(new Point(e.getX(), e.getY()));
             thisPanel.repaint();
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
-
             lines.add(tempLine.clone());
             tempLine.getPoint().clear();
         }
