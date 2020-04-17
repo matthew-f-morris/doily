@@ -337,19 +337,17 @@ public class DoilyGui extends JFrame {
 
                 Font font = new Font("Arial", Font.BOLD, 40);
 
-                gallery.setFont(font));
+                gallery.setFont(font);
 
                 FontMetrics metrics = g.getFontMetrics(font);
                 // Determine the X coordinate for the text
-                int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+                int x = this.getX() + (this.getWidth() - metrics.stringWidth("GALLERY")) / 2;
                 // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-                int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+                int y = this.getY() + ((this.getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
                 // Set the font
-                g.setFont(font);
+                gallery.setFont(font);
                 // Draw the String
-                g.drawString(text, x, y);
-
-                gallery.drawString("GALLERY", this.getWidth() / 2, this.getHeight() / 2);
+                gallery.drawString("GALLERY", x, y);
             }
         }
     }
